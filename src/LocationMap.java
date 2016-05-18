@@ -58,14 +58,16 @@ public class LocationMap {
 
 			for (int i = 0; i < heatMap.length; i++) {
     			for (int j = 0; j < heatMap.length; j++) {
-    				writer.append(new Integer(i).toString());
-    				writer.append(",");
-    				writer.append(new Integer(j).toString());
-    				writer.append(",");
-    				writer.append(new Integer(heatMap[i][j]).toString());
-    				writer.append("\n");
+    				if(heatMap[i][j] != 0) {
+	    				writer.append(new Integer(i).toString());
+	    				writer.append(",");
+	    				writer.append(new Integer(j).toString());
+	    				writer.append(",");
+	    				writer.append(new Integer(heatMap[i][j]).toString());
+	    				writer.append("\n");
+	    			}
     			}
-    			
+    		
     		}
     		
     		writer.flush();
