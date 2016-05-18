@@ -19,5 +19,11 @@ public class Main {
         System.out.println(visitors.size());
         visitors.get(entries.get(1).id).print();
         
+
+        LocationMap map = new LocationMap();
+
+        map.addDataValues(entries);
+        map.saveCSV("../web/data/heatMap.csv");
+
     }
 }

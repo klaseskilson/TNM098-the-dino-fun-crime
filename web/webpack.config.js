@@ -1,0 +1,17 @@
+module.exports = {
+    entry: "./js/main.js",
+    output: {
+        path: __dirname + "/dist",
+        filename: "bundle.js"
+    },
+    module: {
+        loaders: [
+            { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader"}
+        ]
+    },
+    plugins: [],
+    resolve: {
+        extensions: ['', '.js', '.jsx']
+    },
+    devtool: 'source-map'
+};
