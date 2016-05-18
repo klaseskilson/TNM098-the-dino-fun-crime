@@ -2,9 +2,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Created by kalas on 2016-05-18.
- */
 public class DataLine {
     public String type;
     public Date timestamp;
