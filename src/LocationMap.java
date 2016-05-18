@@ -1,4 +1,6 @@
 import java.util.*;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class LocationMap {
 	public int heatMap[][];
@@ -9,8 +11,10 @@ public class LocationMap {
 			Arrays.fill(row, 0);
 	}
 
-	public void addDataValue(DataLine theValue) {
-		heatMap[theValue.x][theValue.y]++;
+	public void addDataValues(ArrayList<DataLine> theValues) {
+		for(DataLine data : theValues) {
+			heatMap[data.x][data.y]++;
+		}
 		
 	}
 
@@ -40,11 +44,36 @@ public class LocationMap {
     	 System.out.println("Max was in: "+ positionX+ " " + positionY);
 		 System.out.println(maxValue);
 	}
-	/*public static void main(String[] args) {
-		LocationMap map = new LocationMap();
 
-		map.printHeatMap();
-	}*/
+	public void saveCSV(String fileName) {
+		try {
+			FileWriter writer = new FileWriter(fileName);
 
+			writer.append("PositionX");
+			writer.append(",");
+			writer.append("PositionY");
+			writer.append(",");
+			writer.append("Amount");
+			writer.append("\n");
+
+			for (int i = 0; i < heatMap.length; i++) {
+    			for (int j = 0; j < heatMap.length; j++) {
+    				writer.append(new Integer(i).toString());
+    				writer.append(",");
+    				writer.append(new Integer(j).toString());
+    				writer.append(",");
+    				writer.append(new Integer(heatMap[i][j]).toString());
+    				writer.append("\n");
+    			}
+    			
+    		}
+    		
+    		writer.flush();
+	    	writer.close();
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
