@@ -8,6 +8,6 @@ public class Main {
         LocationMap map = new LocationMap();
 
         map.addDataValues(entries);
-        map.saveCSV("../data/heatMap.csv");
+        map.saveCSV("../web/data/heatMap.csv");
     }
 }
