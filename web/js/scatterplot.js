@@ -7,7 +7,7 @@ const height = 500 - margin.top - margin.bottom;
 
 class ScatterPlot {
   constructor() {
-    this.data = [];
+    this.max = 0;
     this.init();
   }
 
@@ -36,6 +36,8 @@ class ScatterPlot {
     // convert data values to integers instead of strings
     data = _.map(data, d => _.mapValues(d, parseInt));
 
+    this.max = _.maxBy(data, 'Amount').Amount;
+
     this.x.domain(d3.extent(data, d => d.PositionX)).nice();
     this.y.domain(d3.extent(data, d => d.PositionY)).nice();
 
@@ -49,7 +51,8 @@ class ScatterPlot {
       .attr("class", "dot")
       .attr("r", 3.5)
       .attr("cx", d => this.x(d.PositionX))
-      .attr("cy", d => this.y(d.PositionY));
+      .attr("cy", d => this.y(d.PositionY))
+      .attr('fill-opacity', d => d.Amount / this.max);
   }
 }
 
