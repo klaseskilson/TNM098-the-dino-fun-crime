@@ -14,4 +14,8 @@ public class Coordinate
 
 		return false;
 	}
+	public Coordinate add(int theX, int theY)
+	{
+		return new Coordinate(x+theX, y+theY);
+	}
 }
