@@ -18,4 +18,9 @@ public class Coordinate
 	{
 		return new Coordinate(x+theX, y+theY);
 	}
+
+	public String toString()
+	{
+		return (x+", "+y);
+	}
 }

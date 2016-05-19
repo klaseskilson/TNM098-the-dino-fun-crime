@@ -4,12 +4,13 @@ public class Visitor
 	private List<Coordinate> coords;
 	private List<String> activities;
 	private List<Date> timestamps;
-
-	public Visitor()
+	private int id;
+	public Visitor(int theID)
 	{
 		coords = new ArrayList<Coordinate>();
 		activities = new ArrayList<String>();
 		timestamps = new ArrayList<Date>();
+		id = theID;
 	}
 	
 	public Coordinate getCoordByTime(Date time)
@@ -53,7 +54,26 @@ public class Visitor
 	{
 		for (int i = 0; i < activities.size(); i++)
 		{
-			System.out.println(activities.get(i) +" " +  coords.get(i).x + ", " + coords.get(i).y + " " + timestamps.get(i));
+			System.out.println("id: " + id + " " + activities.get(i) +" " +  coords.get(i).x + ", " + coords.get(i).y + " " + timestamps.get(i));
+		}
+	}
+	public Visitor getPeopleAtBusyCoords(Coordinate busyCoord)
+	{
+		for (int i = 0; i < coords.size(); i++)
+		{
+			if (coords.get(i).equals(busyCoord))
+				return this;
+		}
+		return null;
+	}
+	public void printTime(Coordinate coord)
+	{
+		for (int i = 0; i < coords.size(); i++)
+		{
+			if (coords.get(i).equals(coord))
+			{
+				System.out.println(timestamps.get(i));
+			}
 		}
 	}
 
