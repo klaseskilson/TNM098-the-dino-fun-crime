@@ -17,13 +17,19 @@ public class Main {
         	visitors.get(entries.get(i).id).update(new Coordinate(entries.get(i).x, entries.get(i).y), entries.get(i).type, entries.get(i).timestamp);
         }
         System.out.println(visitors.size());
-        visitors.get(entries.get(1).id).print();
+        visitors.get(entries.get(100).id).print();
         
 
         LocationMap map = new LocationMap();
 
         map.addDataValues(entries);
         map.saveCSV("../web/data/heatMap.csv");
+
+        ArrayList<DataLine> heatMapEntries = CSVReader.readFile("../web/data/heatMap.csv");
+        for (int i = 0; i < heatMapEntries.size(); i++)
+        {
+            
+        }
 
     }
 }
