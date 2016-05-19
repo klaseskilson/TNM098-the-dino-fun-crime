@@ -90,13 +90,6 @@ public class LocationMap {
 				}
 			}
 		}
-
-		/*
-
-		for (Map.Entry<Integer, Coordinate> entry : sortedMap.entrySet()) {
-     		System.out.println("Key: " + entry.getKey() + ". Value: " + entry.getValue());
-		}*/
-		
 	}
 
 }
