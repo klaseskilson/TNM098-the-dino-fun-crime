@@ -4,6 +4,7 @@ import java.io.IOException;
 
 public class LocationMap {
 	public int heatMap[][];
+	Map<Integer, Coordinate> sortedMap;
 
 	public LocationMap() {
 		heatMap = new int[100][100];
@@ -76,6 +77,22 @@ public class LocationMap {
 		catch(IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void sortMap() {
+		sortedMap = new TreeMap<Integer, Coordinate>(Collections.reverseOrder());
+
+		for(int i = 0; i < heatMap.length; i++) {
+			for(int j = 0; j < heatMap.length; j++) {
+				sortedMap.put(heatMap[i][j], new Coordinate(i, j));
+			}
+		}
+		/*
+
+		for (Map.Entry<Integer, Coordinate> entry : sortedMap.entrySet()) {
+     		System.out.println("Key: " + entry.getKey() + ". Value: " + entry.getValue());
+		}*/
+		
 	}
 
 }

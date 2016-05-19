@@ -7,7 +7,7 @@ public class Main {
         System.out.println("Found: " + entries.size());
         HashMap<Integer,Visitor> visitors = new HashMap<Integer,Visitor>();
    		System.out.println(entries.get(1).id);
-        for (int i = 0; i < entries.size(); i++)
+  /*      for (int i = 0; i < entries.size(); i++)
         { 
         	visitors.put(entries.get(i).id, new Visitor());
         }
@@ -19,11 +19,12 @@ public class Main {
         System.out.println(visitors.size());
         visitors.get(entries.get(100).id).print();
         
-
+*/
         LocationMap map = new LocationMap();
 
         map.addDataValues(entries);
-        map.saveCSV("../web/data/heatMap.csv");
+        //map.sortMap();
+        //map.saveCSV("../web/data/heatMap.csv");
 
         ArrayList<DataLine> heatMapEntries = CSVReader.readFile("../web/data/heatMap.csv");
         for (int i = 0; i < heatMapEntries.size(); i++)
