@@ -66,6 +66,16 @@ public class Visitor
 		}
 		return null;
 	}
+
+	public boolean visitedCoords(Coordinate theCoords) {
+		for (int i = 0; i < coords.size(); i++)
+		{
+			if (coords.get(i).equals(theCoords))
+				return true;
+		}
+		return false ;
+	}
+
 	public void printTime(Coordinate coord)
 	{
 		for (int i = 0; i < coords.size(); i++)

@@ -29,13 +29,13 @@ public class Main {
         TreeMap<Integer, Coordinate> treeSortedMap = (TreeMap<Integer, Coordinate>) map.sortedMap;
         System.out.println("Finding people at busy spot...");
         List<Visitor> suspectedVisitors = new ArrayList<Visitor>();
-        Visitor v = new Visitor(0);
+        Visitor v;
         // get people at most busy spot
         for (DataLine entry : entries)
         {
             Coordinate busyCoordinate = treeSortedMap.get(treeSortedMap.firstKey());
-            v = visitors.get(entry.id).getPeopleAtBusyCoords(busyCoordinate);
-            if (v != null) {
+            v = visitors.get(entry.id);
+            if (v.visitedCoords(busyCoordinate)) {
                 suspectedVisitors.add(v);
             }
         }
