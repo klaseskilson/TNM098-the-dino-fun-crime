@@ -1,9 +1,13 @@
 import d3 from 'd3';
 import _ from 'lodash';
 
-const margin = { top: 20, right: 20, bottom: 30, left: 40 };
-const width = 960 - margin.left - margin.right;
-const height = 500 - margin.top - margin.bottom;
+const margin = { top: 0, right: 0, bottom: 80, left: 0 };
+const width = 700 - margin.left - margin.right;
+const height = 700 - margin.top - margin.bottom;
+
+const opacityRange = 0.5;
+const opacityOffset = 1 - opacityRange;
+
 
 class ScatterPlot {
   constructor() {
@@ -13,7 +17,7 @@ class ScatterPlot {
 
   init() {
     // setup svg
-    this.svg = d3.select('body').append('svg')
+    this.svg = d3.select('#sp').append('svg')
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
       .append('g')
@@ -52,7 +56,8 @@ class ScatterPlot {
       .attr("r", 3.5)
       .attr("cx", d => this.x(d.PositionX))
       .attr("cy", d => this.y(d.PositionY))
-      .attr('fill-opacity', d => d.Amount / this.max);
+      .attr('fill-opacity',
+        d => opacityOffset + opacityRange * d.Amount / this.max);
   }
 }
 
