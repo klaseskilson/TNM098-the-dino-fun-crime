@@ -25,7 +25,7 @@ public class Main {
         flow.addData(entries);
 
         System.out.println("Create LocationMap...");
-        LocationMap map = new LocationMap();
+        LocationMap map = new LocationMap("../web/data/heatMap.csv");
         map.addDataValues(entries);
         map.saveCSV("../web/data/heatMap.csv");
 

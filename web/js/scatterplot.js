@@ -8,7 +8,6 @@ const height = 700 - margin.top - margin.bottom;
 const opacityRange = 0.9;
 const opacityOffset = 1 - opacityRange;
 
-
 class ScatterPlot {
   constructor() {
     this.max = 0;
@@ -49,9 +48,19 @@ class ScatterPlot {
     this.y.domain(d3.extent(data, d => d.PositionY)).nice();
 
     this.draw(data);
+
+    var sliderData = d3.select("#slider").on("input", (value) => {
+      document.getElementById("slider-value").innerHTML = d3.select("#slider")[0][0].value;
+      var filteredData = _.filter(data, d => d.Group == d3.select("#slider")[0][0].value);
+      this.max = _.maxBy(filteredData, 'Amount').Amount;
+      this.x.domain(d3.extent(filteredData, d => d.PositionX)).nice();
+      this.y.domain(d3.extent(filteredData, d => d.PositionY)).nice();
+      this.draw(filteredData)        
+    });
   }
 
   draw(data) {
+    this.svg.selectAll(".dot").remove();
     this.svg.selectAll(".dot")
       .data(data)
     .enter().append("circle")
