@@ -18,8 +18,19 @@ public class Main {
         for (DataLine dataLine : entries) {
             visitors.get(dataLine.id).update(new Coordinate(dataLine.x, dataLine.y), dataLine.type, dataLine.timestamp);
         }
+        System.out.println(visitors.size());
+         System.out.println("Running kmeans...");
+         int i = 0;
+         for (Map.Entry<Integer, Visitor> entry : visitors.entrySet()) {
+             Visitor value = entry.getValue();
 
-        System.out.println("Create LocationMap...");
+             Kmeans kMeans = new Kmeans(value);
+             i++;
+             if (i == 3000)
+                break;
+
+         }
+        /*System.out.println("Create LocationMap...");
         LocationMap map = new LocationMap();
         map.addDataValues(entries);
         //map.saveCSV("../web/data/heatMap.csv");
@@ -43,7 +54,8 @@ public class Main {
         for (int i = 0; i < 10; i++)
         {
             suspectedVisitors.get(i).printTime(treeSortedMap.get(treeSortedMap.firstKey()));
-        }
+        }*/
+
 
     }
 }

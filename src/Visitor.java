@@ -86,6 +86,33 @@ public class Visitor
 			}
 		}
 	}
+	public int size()
+	{
+		return coords.size();
+	}
+	public double getHour(int index)
+	{
+		Date d = new Date();
+		d = timestamps.get(index);
+		String dateString = d.toString();
+		int colonIndex = dateString.indexOf(":");
+		String hour = dateString.substring(colonIndex-2, colonIndex);
+
+		double hourNum = Double.parseDouble(hour);
+		return hourNum;
+	}
+
+	public DataPoint getRandomPoint()
+	{
+		Random r = new Random();
+		int upperIndex = coords.size();
+		int randInt = r.nextInt(upperIndex);
+		return new DataPoint(getHour(randInt), coords.get(randInt));
+	}
+	public Coordinate getCoord(int index)
+	{
+		return coords.get(index);
+	}
 
 
 }

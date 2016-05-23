@@ -1,8 +1,8 @@
 public class Coordinate
 {
-	public int x;
-	public int y;
-	public Coordinate(int theX, int theY)
+	public double x;
+	public double y;
+	public Coordinate(double theX, double theY)
 	{
 		x = theX;
 		y = theY;
@@ -14,7 +14,7 @@ public class Coordinate
 
 		return false;
 	}
-	public Coordinate add(int theX, int theY)
+	public Coordinate add(double theX, double theY)
 	{
 		return new Coordinate(x+theX, y+theY);
 	}
