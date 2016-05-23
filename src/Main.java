@@ -19,10 +19,15 @@ public class Main {
             visitors.get(dataLine.id).update(new Coordinate(dataLine.x, dataLine.y), dataLine.type, dataLine.timestamp);
         }
 
+        // detect flow change
+        System.out.println("Create detect flow anomalies...");
+        ChangeDetector flow = new ChangeDetector();
+        flow.addData(entries);
+
         System.out.println("Create LocationMap...");
         LocationMap map = new LocationMap();
         map.addDataValues(entries);
-        //map.saveCSV("../web/data/heatMap.csv");
+        map.saveCSV("../web/data/heatMap.csv");
 
         System.out.println("Sort LocationMap and convert to TreeMap...");
         map.sortMap();
