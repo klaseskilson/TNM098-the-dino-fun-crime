@@ -27,7 +27,6 @@ public class Main {
         System.out.println("Create LocationMap...");
         LocationMap map = new LocationMap("../web/data/heatMap.csv");
         map.addDataValues(entries);
-        map.saveCSV("../web/data/heatMap.csv");
 
         System.out.println("Sort LocationMap and convert to TreeMap...");
         map.sortMap();
