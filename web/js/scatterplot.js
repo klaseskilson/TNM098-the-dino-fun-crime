@@ -5,9 +5,8 @@ const margin = { top: 0, right: 0, bottom: 80, left: 0 };
 const width = 700 - margin.left - margin.right;
 const height = 700 - margin.top - margin.bottom;
 
-const opacityRange = 0.5;
+const opacityRange = 0.9;
 const opacityOffset = 1 - opacityRange;
-
 
 class ScatterPlot {
   constructor() {
@@ -22,6 +21,9 @@ class ScatterPlot {
       .attr('height', height + margin.top + margin.bottom)
       .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+    // setup tooltip
+    this.tooltip = d3.select('body').append('span');
 
     // range and scales
     this.x = d3.scale.linear()
@@ -46,9 +48,19 @@ class ScatterPlot {
     this.y.domain(d3.extent(data, d => d.PositionY)).nice();
 
     this.draw(data);
+
+    var sliderData = d3.select("#slider").on("input", (value) => {
+      document.getElementById("slider-value").innerHTML = d3.select("#slider")[0][0].value;
+      var filteredData = _.filter(data, d => d.Group == d3.select("#slider")[0][0].value);
+      this.max = _.maxBy(filteredData, 'Amount').Amount;
+      this.x.domain(d3.extent(filteredData, d => d.PositionX)).nice();
+      this.y.domain(d3.extent(filteredData, d => d.PositionY)).nice();
+      this.draw(filteredData)        
+    });
   }
 
   draw(data) {
+    this.svg.selectAll(".dot").remove();
     this.svg.selectAll(".dot")
       .data(data)
     .enter().append("circle")
@@ -56,6 +68,9 @@ class ScatterPlot {
       .attr("r", 3.5)
       .attr("cx", d => this.x(d.PositionX))
       .attr("cy", d => this.y(d.PositionY))
+      .on('mouseenter', d => {
+        this.tooltip.html(JSON.stringify(d));
+      })
       .attr('fill-opacity',
         d => opacityOffset + opacityRange * d.Amount / this.max);
   }

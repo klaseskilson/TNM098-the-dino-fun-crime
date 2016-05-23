@@ -20,20 +20,26 @@ public class Main {
         }
         System.out.println(visitors.size());
          System.out.println("Running kmeans...");
-         int i = 0;
+         int j = 0;
          for (Map.Entry<Integer, Visitor> entry : visitors.entrySet()) {
              Visitor value = entry.getValue();
 
              Kmeans kMeans = new Kmeans(value);
-             i++;
-             if (i == 3000)
+             j++;
+             if (j == 3000)
                 break;
 
          }
-        /*System.out.println("Create LocationMap...");
-        LocationMap map = new LocationMap();
+
+
+        // detect flow change
+        System.out.println("Create detect flow anomalies...");
+        ChangeDetector flow = new ChangeDetector();
+        flow.addData(entries);
+
+        System.out.println("Create LocationMap...");
+        LocationMap map = new LocationMap("../web/data/heatMap.csv");
         map.addDataValues(entries);
-        //map.saveCSV("../web/data/heatMap.csv");
 
         System.out.println("Sort LocationMap and convert to TreeMap...");
         map.sortMap();
@@ -54,7 +60,7 @@ public class Main {
         for (int i = 0; i < 10; i++)
         {
             suspectedVisitors.get(i).printTime(treeSortedMap.get(treeSortedMap.firstKey()));
-        }*/
+        }
 
 
     }
