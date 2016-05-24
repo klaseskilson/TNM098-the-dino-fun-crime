@@ -18,11 +18,28 @@ public class Main {
         for (DataLine dataLine : entries) {
             visitors.get(dataLine.id).update(new Coordinate(dataLine.x, dataLine.y), dataLine.type, dataLine.timestamp);
         }
+        System.out.println(visitors.size());
+         System.out.println("Running kmeans...");
+         int j = 0;
+         for (Map.Entry<Integer, Visitor> entry : visitors.entrySet()) {
+             Visitor value = entry.getValue();
+
+             Kmeans kMeans = new Kmeans(value);
+             j++;
+             if (j == 3000)
+                break;
+
+         }
+
+
+        // detect flow change
+        System.out.println("Create detect flow anomalies...");
+        ChangeDetector flow = new ChangeDetector();
+        flow.addData(entries);
 
         System.out.println("Create LocationMap...");
         LocationMap map = new LocationMap("../web/data/heatMap.csv");
         map.addDataValues(entries);
-       
 
         System.out.println("Sort LocationMap and convert to TreeMap...");
         map.sortMap();
@@ -44,6 +61,7 @@ public class Main {
         {
             suspectedVisitors.get(i).printTime(treeSortedMap.get(treeSortedMap.firstKey()));
         }
+
 
     }
 }

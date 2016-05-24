@@ -133,6 +133,8 @@ public class LocationMap {
     		
     		writer.flush();
 	    	writer.close();
+
+			System.out.println("Wrote to " + fileName);
 		}
 		catch(IOException e) {
 			e.printStackTrace();
