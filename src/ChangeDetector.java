@@ -10,13 +10,17 @@ public class ChangeDetector {
             this.amount = amount;
             this.timestamp = timestamp;
         }
+
+        public String toString() {
+            return this.amount + " @ " + this.timestamp;
+        }
     }
 
     // how large should the anomaly be compared to the mean?
-    private final static int ANOMALY_FACTOR = 4;
+    private final static int ANOMALY_FACTOR = 2;
 
     // how many parts should each hour be divided into?
-    private final static int STEPS_PER_HOUR = 4;
+    private final static int STEPS_PER_HOUR = 1;
     private final static int HOUR_IN_MS = 1000 * 60 * 60;
     private final static int DELIMETER = HOUR_IN_MS / STEPS_PER_HOUR;
 
@@ -37,7 +41,7 @@ public class ChangeDetector {
         // read data line by line and save the time stamps in hashmap based on the coordinates
         for (DataLine entry : data) {
             // group checkins to analyse larger areas
-            double reductionFactor = 3.0;
+            double reductionFactor = 1.0;
             int x = (int) Math.round(entry.x / reductionFactor),
                 y = (int) Math.round(entry.y / reductionFactor);
 
@@ -116,10 +120,45 @@ public class ChangeDetector {
             for (Change v : changes) {
                 if (Math.abs((float) v.amount) > min) {
                     positionAnomalies.add(v);
-//                    System.out.println("Large change hr " + v.timestamp + "! (" + key + "): |" + v.amount + "| > " + min);
                 }
             }
             anomalies.put(key, positionAnomalies);
+        }
+    }
+
+    public void print() {
+        System.out.println("Found anomalies:");
+        for (String key : anomalies.keySet()) {
+            print(key, anomalies.get(key));
+        }
+    }
+
+    private void print(String key, ArrayList<Change> positionChanges) {
+        // avoid printing irrelevant info
+        if (positionChanges.size() != 0) {
+            System.out.println(key + "(" + positionChanges.size() + ")");
+            for (Change c : positionChanges) {
+                System.out.println("\t" + c);
+            }
+        }
+
+    }
+
+    /**
+     * print anomalies within given coordinates
+     * @param fromX
+     * @param toX
+     * @param fromY
+     * @param toY
+     */
+    public void print(int fromX, int toX, int fromY, int toY) {
+        System.out.println("Found anomalies:");
+        for (; fromX <= toX; ++fromX) {
+            for (; fromY <= toY; ++fromY) {
+                String key = fromX + "," + fromY;
+                ArrayList<Change> positionChanges = anomalies.getOrDefault(key, new ArrayList<>());
+                print(key, positionChanges);
+            }
         }
     }
 

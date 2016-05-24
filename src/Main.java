@@ -18,6 +18,18 @@ public class Main {
         for (DataLine dataLine : entries) {
             visitors.get(dataLine.id).update(new Coordinate(dataLine.x, dataLine.y), dataLine.type, dataLine.timestamp);
         }
+
+        // reduce data amount by summarizing over time
+        System.out.println("Create LocationMap...");
+        LocationMap map = new LocationMap("../web/data/heatMap.csv");
+        map.addDataValues(entries);
+
+        // detect flow change
+        System.out.println("Detecting flow anomalies...");
+        ChangeDetector flow = new ChangeDetector();
+        flow.addData(entries);
+        flow.print(30, 40, 30, 40);
+
         System.out.println(visitors.size());
         System.out.println("Running kmeans...");
         int j = 0;
@@ -29,15 +41,6 @@ public class Main {
             if (j == 3000)
                break;
         }
-
-        // detect flow change
-        System.out.println("Detecting flow anomalies...");
-        ChangeDetector flow = new ChangeDetector();
-        flow.addData(entries);
-
-        System.out.println("Create LocationMap...");
-        LocationMap map = new LocationMap("../web/data/heatMap.csv");
-        map.addDataValues(entries);
 
         System.out.println("Sort LocationMap and convert to TreeMap...");
         map.sortMap();
