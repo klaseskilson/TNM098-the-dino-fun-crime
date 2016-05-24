@@ -130,7 +130,7 @@ public class Kmeans
 			}
 		}
 
-		/*if (iterations == 0)
+		if (iterations == 0)
 		{
 			iterations++;
 			
@@ -152,7 +152,7 @@ public class Kmeans
 
 				checkQuality();
 			}
-		}*/
+		}
 		
 	}
 
