@@ -1,11 +1,32 @@
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class ChangeDetector {
+    private class Change {
+        public int amount;
+        public Date timestamp;
+
+        public Change(int amount, Date timestamp) {
+            this.amount = amount;
+            this.timestamp = timestamp;
+        }
+    }
+
+    // how large should the anomaly be compared to the mean?
+    private final static int ANOMALY_FACTOR = 4;
+
+    // how many parts should each hour be divided into?
+    private final static int STEPS_PER_HOUR = 4;
+    private final static int HOUR_IN_MS = 1000 * 60 * 60;
+    private final static int DELIMETER = HOUR_IN_MS / STEPS_PER_HOUR;
+
     HashMap<String, ArrayList<Date>> timestamps;
-    HashMap<String, int[]> checkins;
+    HashMap<String, HashMap<Integer, Integer>> checkins;
+    HashMap<String, ArrayList<Change>> anomalies;
 
     public ChangeDetector() {
         timestamps = new HashMap<>(1000);
+        anomalies = new HashMap<>();
     }
 
     /**
@@ -19,6 +40,8 @@ public class ChangeDetector {
             double reductionFactor = 3.0;
             int x = (int) Math.round(entry.x / reductionFactor),
                 y = (int) Math.round(entry.y / reductionFactor);
+
+            // store data with keys in the format "x,y"
             String key = x + "," + y;
             ArrayList<Date> datesForPosition = timestamps.getOrDefault(key, new ArrayList<Date>());
             datesForPosition.add(entry.timestamp);
@@ -31,44 +54,49 @@ public class ChangeDetector {
     public void calculatePerHour() {
         checkins = new HashMap<>(timestamps.size());
         for (String key : timestamps.keySet()) {
-            int[] perHour = checkins.getOrDefault(key, new int[24]);
-            Arrays.fill(perHour, 0);
+            HashMap<Integer, Integer> perHour = checkins.getOrDefault(key, new HashMap<>());
             ArrayList<Date> datesForPosition = timestamps.get(key);
             for (Date time : datesForPosition) {
-                int hour = getHour(time);
-                perHour[hour]++;
+                int timeKey = getKeyFromDate(time);
+                int count = perHour.getOrDefault(timeKey, 0);
+                perHour.put(timeKey, ++count);
             }
             checkins.put(key, perHour);
         }
     }
 
     public void detectLargeChanges() {
-        HashMap<String, Integer[]> perPosition = changesPerPosition();
+        HashMap<String, Change[]> perPosition = changesPerPosition();
         HashMap<String, Float> meanValues = getMeanPerPosition(perPosition);
         findOutliers(perPosition, meanValues);
     }
 
-    private HashMap<String, Integer[]> changesPerPosition() {
-        HashMap<String, Integer[]> changes = new HashMap<>();
+    private HashMap<String, Change[]> changesPerPosition() {
+        HashMap<String, Change[]> changes = new HashMap<>();
         for (String key : checkins.keySet()) {
-            int[] perHour = checkins.get(key);
-            List<Integer> positionChanges = new ArrayList<>();
-            for (int i = 1; i < perHour.length; ++i) {
-                int change = Math.abs(perHour[i] - perHour[i - 1]);
-                positionChanges.add(change);
+            HashMap<Integer, Integer> perTime = checkins.get(key);
+            List<Change> positionChanges = new ArrayList<>();
+            for (Integer timeKey : perTime.keySet()) {
+                int now = perTime.get(timeKey);
+                int previousKey = timeKey - 1;
+                int then = perTime.getOrDefault(previousKey, 0);
+                int change = now - then;
+                Date d = new Date();
+                d.setTime((long) timeKey * DELIMETER);
+                positionChanges.add(new Change(change, d));
             }
-            changes.put(key, positionChanges.toArray(new Integer[positionChanges.size()]));
+            changes.put(key, positionChanges.toArray(new Change[positionChanges.size()]));
         }
         return changes;
     }
 
-    private HashMap<String, Float> getMeanPerPosition(HashMap<String, Integer[]> perPosition) {
+    private HashMap<String, Float> getMeanPerPosition(HashMap<String, Change[]> perPosition) {
         HashMap<String, Float> means = new HashMap<>(perPosition.size());
         for (String key : perPosition.keySet()) {
-            Integer[] changes = perPosition.get(key);
+            Change[] changes = perPosition.get(key);
             int sum = 0, count = 0;
-            for (Integer v : changes) {
-                int value = v;
+            for (Change v : changes) {
+                int value = Math.abs(v.amount);
                 if (value != 0) {
                     sum += value;
                     ++count;
@@ -79,24 +107,24 @@ public class ChangeDetector {
         return means;
     }
 
-    private void findOutliers(HashMap<String, Integer[]> perPosition, HashMap<String, Float> means) {
-        double factor = 1.5;
+    private void findOutliers(HashMap<String, Change[]> perPosition, HashMap<String, Float> means) {
         for (String key : perPosition.keySet()) {
-            Integer[] changes = perPosition.get(key);
+            Change[] changes = perPosition.get(key);
+            ArrayList<Change> positionAnomalies = anomalies.getOrDefault(key, new ArrayList<>());
             Float mean = means.get(key);
-            int hour = 0;
-            for (Integer v : changes) {
-                if ((float) v > mean * factor) {
-                    System.out.println("Large change hr " + hour + "! (" + key + "): " + v + " > " + mean);
+            float min = mean * ANOMALY_FACTOR;
+            for (Change v : changes) {
+                if (Math.abs((float) v.amount) > min) {
+                    positionAnomalies.add(v);
+//                    System.out.println("Large change hr " + v.timestamp + "! (" + key + "): |" + v.amount + "| > " + min);
                 }
-                ++hour;
             }
+            anomalies.put(key, positionAnomalies);
         }
     }
 
-    private int getHour(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return calendar.get(Calendar.HOUR_OF_DAY);
+    private int getKeyFromDate(Date date) {
+        int time = (int) (date.getTime() / DELIMETER);
+        return time;
     }
 }
