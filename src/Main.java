@@ -19,21 +19,19 @@ public class Main {
             visitors.get(dataLine.id).update(new Coordinate(dataLine.x, dataLine.y), dataLine.type, dataLine.timestamp);
         }
         System.out.println(visitors.size());
-         System.out.println("Running kmeans...");
-         int j = 0;
-         for (Map.Entry<Integer, Visitor> entry : visitors.entrySet()) {
-             Visitor value = entry.getValue();
+        System.out.println("Running kmeans...");
+        int j = 0;
+        for (Map.Entry<Integer, Visitor> entry : visitors.entrySet()) {
+            Visitor value = entry.getValue();
 
-             Kmeans kMeans = new Kmeans(value);
-             j++;
-             if (j == 3000)
-                break;
-
-         }
-
+            Kmeans kMeans = new Kmeans(value);
+            j++;
+            if (j == 3000)
+               break;
+        }
 
         // detect flow change
-        System.out.println("Create detect flow anomalies...");
+        System.out.println("Detecting flow anomalies...");
         ChangeDetector flow = new ChangeDetector();
         flow.addData(entries);
 
