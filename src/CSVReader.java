@@ -12,16 +12,22 @@ public class CSVReader {
      */
     public static ArrayList<DataLine> readFile(String fileName) {
         // create arraylist for data
+        int lineNumbers = lineNumbers(fileName);
+        int stepSize = lineNumbers / 5;
+
         ArrayList<DataLine> entries = new ArrayList<>();
 
         // read line by line
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            boolean first = false;
+            int count = 0;
             for(String line; (line = br.readLine()) != null; ) {
+                ++count;
                 // ignore first line containing csv header
-                if (!first) {
-                    first = true;
+                if (count == 1) {
                     continue;
+                }
+                if (count % stepSize == 0) {
+                    System.out.printf("... %.1f%%\n", (float) 100 * count / lineNumbers);
                 }
 
                 // append new DataLine entry to entries
@@ -36,6 +42,21 @@ public class CSVReader {
             return null;
         }
 
+        System.out.println("... done!");
+
         return entries;
+    }
+
+    private static int lineNumbers(String fileName) {
+        int count = 0;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            while (br.readLine() != null) ++count;
+        } catch (Exception e) {
+            System.out.println("Could not count line numbers " + fileName);
+            System.out.println(e.toString());
+        }
+
+        return count;
     }
 }
