@@ -29,13 +29,31 @@ public class LocationMap {
 	//Also creates a local heatMap and saves it to the CSV. The local heatMap is
 	//zeroed for each increment of hour.
 	public void addDataValues(ArrayList<DataLine> theValues) {
+		boolean inserted = false;
+		int counter = 1;
 		createCSV(CSVFile);
 		for(int i = 8; i < 24; i++) {
 			for(DataLine data : theValues) {
-				if(data.timestamp.getHours() == i)
+				if(data.timestamp.getHours() == i){
 					heatMapwithTimes[data.x][data.y]++;
+					if((data.timestamp.getMinutes()%5 == 0) && !inserted) {
+						inserted = true;
+						saveCSV(CSVFile, (i*100)+5*counter);
+						for(int[] row: heatMapwithTimes)
+							Arrays.fill(row, 0);
+						counter++;
+
+					}
+					if(data.timestamp.getMinutes()%5 != 0)
+						inserted = false;
+						if(counter == 12)
+							counter = 0;
+
+				}
+
 			}
-			saveCSV(CSVFile, i);
+			inserted = false;
+			saveCSV(CSVFile, i*100);
 			for(int[] row: heatMapwithTimes)
 				Arrays.fill(row, 0);
 
@@ -94,6 +112,7 @@ public class LocationMap {
 		}
 	}
 	public void saveCSV(String fileName, Integer Group) {
+		System.out.println("Adding group" + Group);
 		try {
 			FileWriter writer = new FileWriter(fileName, true);
 			for (int i = 0; i < heatMapwithTimes.length; i++) {
