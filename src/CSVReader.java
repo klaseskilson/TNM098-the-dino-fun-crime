@@ -25,7 +25,10 @@ public class CSVReader {
                 }
 
                 // append new DataLine entry to entries
-                entries.add(new DataLine(line));
+                try {
+                    DataLine dataLine = new DataLine(line);
+                    entries.add(dataLine);
+                } catch (Exception e) {}
             }
         } catch (Exception e) {
             System.out.println("Could not read file " + fileName);

@@ -56,9 +56,6 @@ public class ChangeDetector {
             for (int i = 1; i < perHour.length; ++i) {
                 int change = Math.abs(perHour[i] - perHour[i - 1]);
                 positionChanges.add(change);
-                if (perHour[i - 1] != 0 && change != 0) {
-//                    System.out.println("Change: " + change + " at " + key);
-                }
             }
             changes.put(key, positionChanges.toArray(new Integer[positionChanges.size()]));
         }
