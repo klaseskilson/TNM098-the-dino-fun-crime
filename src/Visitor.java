@@ -114,5 +114,7 @@ public class Visitor
 		return coords.get(index);
 	}
 
-
+	public List<Date> getTimestamps() {
+		return timestamps;
+	}
 }
