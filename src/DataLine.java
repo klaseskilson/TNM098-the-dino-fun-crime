@@ -13,7 +13,7 @@ public class DataLine {
      * construct a data line entry from a string
      * @param line a line containing the data
      */
-    public DataLine(String line) {
+    public DataLine(String line) throws Exception {
         String[] content = line.split(",");
 
         // the data is stored as: Timestamp,id,type,X,Y
@@ -26,6 +26,7 @@ public class DataLine {
         } catch (Exception e) {
             System.out.println("Could not parse data line: " + line);
             System.out.println(e.toString());
+            throw e;
         }
     }
 }

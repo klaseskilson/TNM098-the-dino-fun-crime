@@ -5,12 +5,14 @@ public class Visitor
 	private List<String> activities;
 	private List<Date> timestamps;
 	public int id;
+	public ArrayList<Visitor> groupMembers;
 	public Visitor(int theID)
 	{
 		coords = new ArrayList<Coordinate>();
 		activities = new ArrayList<String>();
 		timestamps = new ArrayList<Date>();
 		id = theID;
+		groupMembers = new ArrayList<Visitor>();
 	}
 	
 	public Coordinate getCoordByTime(Date time)
@@ -57,6 +59,19 @@ public class Visitor
 			System.out.println("id: " + id + " " + activities.get(i) +" " +  coords.get(i).x + ", " + coords.get(i).y + " " + timestamps.get(i));
 		}
 	}
+
+	public void printGroup()
+	{
+		if (groupMembers.size() > 0)
+		{
+			System.out.println("Group: ");
+			for (int i = 0; i < groupMembers.size(); i++)
+			{
+				System.out.println(groupMembers.get(i).id);
+			}
+		}
+	}
+
 	public Visitor getPeopleAtBusyCoords(Coordinate busyCoord)
 	{
 		for (int i = 0; i < coords.size(); i++)
@@ -129,6 +144,10 @@ public class Visitor
 
 	public boolean hasSameMovement(Visitor v)
 	{
+		if (id == v.id)
+		{
+			return false; //same visitor
+		}
 		int size;
 		int counter = 0;
 		if (coords.size() > v.coords.size())
@@ -139,6 +158,7 @@ public class Visitor
 		{
 			size = coords.size();
 		}
+
 		for (int i = 0; i < size; i++)
 		{
 			if (coords.get(i).x == v.coords.get(i).x && coords.get(i).y == v.coords.get(i).y &&
@@ -151,10 +171,32 @@ public class Visitor
 
 		}
 
-		if (counter > 10)
+		if (counter > 1000)
 			return true;
 
 		return false;
+	}
+
+	public void addToGroup (Visitor v)
+	{
+		boolean contains = false;
+		if (groupMembers.size() == 0 && v.id != id)
+		{
+			groupMembers.add(v);
+		}
+		for (int i = 0; i < groupMembers.size(); i++)
+		{
+			if (groupMembers.get(i).id == v.id || (id == v.id))
+			{
+				contains = true;
+				break;
+			}
+		}
+		
+
+		if (!contains)
+			groupMembers.add(v);
+
 	}
 
 
