@@ -5,17 +5,19 @@ public class Kmeans
 	int k;
 	private Visitor visitor;
 	HashMap<Integer, DataPoint> randomCentroids;
-	HashMap<Integer, DataPoint> timeAndPlace;
+	public HashMap<Integer, DataPoint> timeAndPlace;
 	int iterations;
 	double quality;
 	double newQuality;
+	public int id;
 	public Kmeans(Visitor theVisitor)
 	{
 		visitor = theVisitor;
+		id = visitor.id;
 		iterations = 0;
 		quality = 0;
 		newQuality = 0;
-		k = 10;
+		k = 50;
 		run();
 	}
 	private void run()
@@ -130,7 +132,7 @@ public class Kmeans
 			}
 		}
 
-		/*if (iterations == 0)
+		if (iterations == 0)
 		{
 			iterations++;
 			
@@ -142,21 +144,51 @@ public class Kmeans
 
 		else
 		{
-			if (newQuality < quality)
+			if (iterations < 4)
 			{
-				iterations++;
-				quality = newQuality;
-				newQuality = 0;
-				assignToCluster();
-				recalculateCentroids();
+				if (newQuality < quality)
+				{
+					iterations++;
+					quality = newQuality;
+					newQuality = 0;
+					assignToCluster();
+					recalculateCentroids();
 
-				checkQuality();
+					checkQuality();
+				}
 			}
-		}*/
+		}
 		
 	}
 
-	private void print()
+	public boolean compareVisitors(HashMap<Integer, DataPoint> theTimeAndPlace)
+	{
+		int counter = 0;
+		int size;
+		if (timeAndPlace.size() != theTimeAndPlace.size())
+		{
+			return false;
+		}
+
+	
+		for (int i = 0; i < timeAndPlace.size(); i++)
+		{
+			if (timeAndPlace.get(i).centroidIndex == theTimeAndPlace.get(i).centroidIndex)
+			{
+				counter++;
+				System.out.println(timeAndPlace.get(i).coord.x + ", " + timeAndPlace.get(i).coord.y +" at " + timeAndPlace.get(i).hour);
+				System.out.println(theTimeAndPlace.get(i).coord.x +  ", " + theTimeAndPlace.get(i).coord.y +" at " + theTimeAndPlace.get(i).hour);
+			}
+		}
+		if (counter > 50)
+		{
+			return true;
+		}
+		else
+			return false;
+	}
+
+	public void print()
 	{
 		for (int i = 0; i < timeAndPlace.size(); i++)
 		{

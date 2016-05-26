@@ -4,7 +4,7 @@ public class Visitor
 	private List<Coordinate> coords;
 	private List<String> activities;
 	private List<Date> timestamps;
-	private int id;
+	public int id;
 	public Visitor(int theID)
 	{
 		coords = new ArrayList<Coordinate>();
@@ -102,6 +102,19 @@ public class Visitor
 		return hourNum;
 	}
 
+	public double getMin(int index)
+	{
+		Date d = new Date();
+		d = timestamps.get(index);
+		String dateString = d.toString();
+		int colonIndex = dateString.indexOf(":");
+		String restString = dateString.substring(colonIndex+1);
+		colonIndex = restString.indexOf(":");
+		String min = restString.substring(colonIndex -2, colonIndex);
+		Double minNum = Double.parseDouble(min);
+		return minNum;
+	}
+
 	public DataPoint getRandomPoint()
 	{
 		Random r = new Random();
@@ -112,6 +125,36 @@ public class Visitor
 	public Coordinate getCoord(int index)
 	{
 		return coords.get(index);
+	}
+
+	public boolean hasSameMovement(Visitor v)
+	{
+		int size;
+		int counter = 0;
+		if (coords.size() > v.coords.size())
+		{
+			size = v.coords.size();
+		}
+		else
+		{
+			size = coords.size();
+		}
+		for (int i = 0; i < size; i++)
+		{
+			if (coords.get(i).x == v.coords.get(i).x && coords.get(i).y == v.coords.get(i).y &&
+				getHour(i) == v.getHour(i) && getMin(i) == v.getMin(i))
+			{
+				/*System.out.println(coords.get(i).x + ", " + coords.get(i).y + " & " +  v.coords.get(i).x + ", " + 
+					v.coords.get(i).y + " at " + getHour(i)+":"+getMin(i));*/
+				counter++;
+			}
+
+		}
+
+		if (counter > 10)
+			return true;
+
+		return false;
 	}
 
 
