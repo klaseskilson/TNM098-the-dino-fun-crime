@@ -20,7 +20,7 @@ public class ChangeDetector {
     private final static int ANOMALY_FACTOR = 2;
 
     // how many parts should each hour be divided into?
-    private final static int STEPS_PER_HOUR = 1;
+    private final static int STEPS_PER_HOUR = 6;
     private final static int HOUR_IN_MS = 1000 * 60 * 60;
     private final static int DELIMETER = HOUR_IN_MS / STEPS_PER_HOUR;
 
@@ -151,7 +151,7 @@ public class ChangeDetector {
      * @param fromY
      * @param toY
      */
-    public void print(int fromX, int toX, int fromY, int toY) {
+    public void printBox(int fromX, int toX, int fromY, int toY) {
         System.out.println("Found anomalies:");
         for (; fromX <= toX; ++fromX) {
             for (; fromY <= toY; ++fromY) {

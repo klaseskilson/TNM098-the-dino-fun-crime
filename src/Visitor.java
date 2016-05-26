@@ -199,5 +199,7 @@ public class Visitor
 
 	}
 
-
+	public List<Date> getTimestamps() {
+		return timestamps;
+	}
 }

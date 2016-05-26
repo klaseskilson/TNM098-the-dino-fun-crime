@@ -4,11 +4,11 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Reading file...");
-        ArrayList<DataLine> entries = CSVReader.readFile("../data/park-movement-Sat.csv");
+        ArrayList<DataLine> entries = CSVReader.readFile("../data/park-movement-Sun.csv");
         System.out.println("Found: " + entries.size());
 
         // create all visitor entries from the result of the CSV reader,
-        // don't care if they get replaced
+        // don't care if they get replaced, the id of each person is the key
         HashMap<Integer,Visitor> visitors = new HashMap<Integer,Visitor>();
         System.out.println("Converting to HashMap...");
         for (DataLine dataLine : entries) {
@@ -18,17 +18,7 @@ public class Main {
         for (DataLine dataLine : entries) {
             visitors.get(dataLine.id).update(new Coordinate(dataLine.x, dataLine.y), dataLine.type, dataLine.timestamp);
         }
-       /*  System.out.println("Running kmeans...");
-         int j = 0;
-         ArrayList<Kmeans> list = new ArrayList<Kmeans>();
-         for (Map.Entry<Integer, Visitor> entry : visitors.entrySet()) {
-             Visitor value = entry.getValue();
-             Kmeans kMeans = new Kmeans(value);
-             list.add(kMeans);
-             j++;
-             if (j == 1000)
-                break;
-         }*/
+
          System.out.println("Comparing");
         Iterator it = visitors.entrySet().iterator();
         HashMap<Integer, Visitor> visitorsCopy = new HashMap<Integer,Visitor>(visitors);
@@ -63,6 +53,19 @@ public class Main {
          {
              entry.getValue().printGroup();
          }
+        for (Visitor visitor : visitors.values()) {
+            MovementAnalyser analyser = new MovementAnalyser(visitor);
+            List<MovementAnalyser.Movement> movements = analyser.detectNonMoving();
+            int sum = analyser.sumWaiting();
+            if (sum > 50000) {
+                System.out.println("waiting: " + analyser.sumWaiting());
+            }
+        }
+
+        // reduce data amount by summarizing over time
+        System.out.println("Create LocationMap...");
+        LocationMap map = new LocationMap("../web/data/heatMap.csv");
+        map.addDataValues(entries);
 
          
 
@@ -72,9 +75,9 @@ public class Main {
         System.out.println("Detecting flow anomalies...");
         ChangeDetector flow = new ChangeDetector();
         flow.addData(entries);
-        flow.print(30, 40, 30, 40);
+        flow.printBox(30, 40, 30, 40);
 
-        System.out.println(visitors.size());
+
         System.out.println("Running kmeans...");
         int j = 0;
         for (Map.Entry<Integer, Visitor> entry : visitors.entrySet()) {
