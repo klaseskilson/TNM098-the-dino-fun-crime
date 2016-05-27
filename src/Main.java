@@ -48,7 +48,7 @@ public class Main {
             }
             System.out.println(c);
            // c++;
-            //removeList.clear();
+            removeList.clear();
            /* if (c == 10)
                 break;*/
             
