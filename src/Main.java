@@ -1,8 +1,9 @@
 import java.util.*;
-
+import java.io.*;
 public class Main {
 
     public static void main(String[] args) {
+
         System.out.println("Reading file...");
         ArrayList<DataLine> entries = CSVReader.readFile("../data/park-movement-Sun.csv");
         System.out.println("Found: " + entries.size());
@@ -18,13 +19,13 @@ public class Main {
         for (DataLine dataLine : entries) {
             visitors.get(dataLine.id).update(new Coordinate(dataLine.x, dataLine.y), dataLine.type, dataLine.timestamp);
         }
-
          System.out.println("Comparing");
-        Iterator it = visitors.entrySet().iterator();
         HashMap<Integer, Visitor> visitorsCopy = new HashMap<Integer,Visitor>(visitors);
         System.out.println(visitors.size());
         ArrayList<Integer> removeList = new ArrayList<Integer>();
-        while (it.hasNext()) 
+        int c = 0;
+
+        for (Iterator it = visitors.entrySet().iterator(); it.hasNext();)
         {
             Map.Entry entry = (Map.Entry)it.next();
             Visitor v = (Visitor)entry.getValue();
@@ -37,23 +38,44 @@ public class Main {
                 {
                     v.addToGroup(v2);
                     removeList.add((Integer)entry2.getKey());
+                    removeList.add((Integer)entry.getKey());
                 }
             }
+            c++;
             for (int i = 0; i < removeList.size(); i++)
             {
                 visitorsCopy.remove(removeList.get(i));
             }
-            removeList.clear();
+            System.out.println(c);
+           // c++;
+            //removeList.clear();
+           /* if (c == 10)
+                break;*/
             
          }
-         System.out.println(visitors.size());
          System.out.println("Comparing done");
 
-         for (Map.Entry<Integer, Visitor> entry : visitors.entrySet()) 
-         {
-             entry.getValue().printGroup();
+         try{
+             BufferedWriter writer = new BufferedWriter(new FileWriter("groups.txt"));
+
+             for (Map.Entry<Integer, Visitor> entry : visitors.entrySet()) 
+             {
+                if (entry.getValue().hasGroup())
+                {
+                    writer.write("Group ids: ");
+                    writer.write(entry.getValue().getPrintString());
+                    writer.write("\n");
+                }
+             }
+             writer.close();
          }
-        for (Visitor visitor : visitors.values()) {
+         catch(Exception e)
+         {
+             e.printStackTrace();
+         }
+
+
+        /*for (Visitor visitor : visitors.values()) {
             MovementAnalyser analyser = new MovementAnalyser(visitor);
             List<MovementAnalyser.Movement> movements = analyser.detectNonMoving();
             int sum = analyser.sumWaiting();
@@ -65,7 +87,7 @@ public class Main {
         // reduce data amount by summarizing over time
         System.out.println("Create LocationMap...");
         LocationMap map = new LocationMap("../web/data/heatMap.csv");
-        map.addDataValues(entries);
+        map.addDataValues(entries);*/
 
          
 

@@ -1,4 +1,5 @@
 import java.util.*;
+import java.io.*;
 public class Visitor
 {
 	private List<Coordinate> coords;
@@ -64,12 +65,22 @@ public class Visitor
 	{
 		if (groupMembers.size() > 0)
 		{
-			System.out.println("Group: ");
+			System.out.println("Group");
+			System.out.println(id + ", ");
 			for (int i = 0; i < groupMembers.size(); i++)
 			{
 				System.out.println(groupMembers.get(i).id);
 			}
 		}
+	}
+	public String getPrintString()
+	{
+		String s = id + ", ";
+		for (int i = 0; i < groupMembers.size(); i++)
+		{
+			s+=groupMembers.get(i).id + ", ";
+		}
+		return s;
 	}
 
 	public Visitor getPeopleAtBusyCoords(Coordinate busyCoord)
@@ -167,13 +178,13 @@ public class Visitor
 				/*System.out.println(coords.get(i).x + ", " + coords.get(i).y + " & " +  v.coords.get(i).x + ", " + 
 					v.coords.get(i).y + " at " + getHour(i)+":"+getMin(i));*/
 				counter++;
+				if (counter > 1000)
+				{
+					return true;
+				}
 			}
 
 		}
-
-		if (counter > 1000)
-			return true;
-
 		return false;
 	}
 
@@ -192,14 +203,33 @@ public class Visitor
 				break;
 			}
 		}
-		
-
 		if (!contains)
 			groupMembers.add(v);
 
 	}
 
+	public boolean hasGroup()
+	{
+		if (groupMembers.size() != 0) return true;
+
+		return false;
+	}
+
 	public List<Date> getTimestamps() {
 		return timestamps;
+	}
+	@Override
+	public int hashCode()
+	{
+		return id;
+	}
+	@Override
+	public boolean equals(Object obj)
+	{
+		Visitor v = (Visitor) obj;
+		if (id == v.id)
+			return true;
+
+		return false;
 	}
 }
