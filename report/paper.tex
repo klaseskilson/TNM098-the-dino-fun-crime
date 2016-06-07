@@ -69,21 +69,27 @@
 
 %% Paper title.
 
-\title{Analytics of the Dino Fun Crime problem}
+\title{Analyzing and detecting patterns in multivariate data}
 
 %% This is how authors are specified in the journal style
 
 %% indicate IEEE Member or Student Member in form indicated below
 \author{Carl Englund, Einar Sandberg, Klas Eskilson}
+\authorfooter{
+  \item
+    Carl Englund, Link\"oping University, Sweden, e-mail: caren083@student.liu.se.
+  \item
+    Einar Sandberg, Link\"oping University, Sweden, e-mail: einsa241@student.liu.se.
+  \item
+    Klas Eskilson, Link\"oping University, Sweden, e-mail: klaes950@student.liu.se.
+}
 
 
 %% Abstract section.
-\abstract{This report is written for a data analytics project in the course TNM098 (Advance Visual Data Analysis) at Linköpings University. It covers the development process of data mining techniques and visualization of a data set covering a amusement park over a weekend.}
+\abstract{This report is written for a data analytics project in the course TNM098 (Advance Visual Data Analysis) at Link\"oping University. It covers the development process of data mining and visualization techniques of a data set covering an amusement park over a weekend in order to find pattern anomalies.}
 %% Keywords that describe your work. Will show as 'Index Terms' in journal
 %% please capitalize first letter and insert punctuation after last keyword
-\keywords{Multivariate data}
-
-
+\keywords{Multivariate data, VAST Challenge.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%% START OF THE PAPER %%%%%%%%%%%%%%%%%%%%%%
@@ -97,19 +103,17 @@
 %% the only exception to this rule is the \firstsection command
 \firstsection{Introduction}
 
-\maketitle The report covers the implementation of algorithms and techniques used to uncover anomalies in a large dataset, as well as how to make the data run effectively even though the large size of the dataset. 
+\maketitle The report covers the implementation of algorithms and techniques used to uncover anomalies in a large dataset, as well as how to make the data run effectively even though the large size of the dataset.
 
 The task at hand was to determine when the crime introduced in a news article attached to the data set used occured. Issues that will be discussed will be the following:
 \begin{itemize}
 	\item When did the crime occur?
 	\item Is it possible to determine who or whom committed the crime?
-	\item Did the crime affect the park in any way more than a partial closure during the time of the event?	
+	\item Did the crime affect the park in any way more than a partial closure during the time of the event?
 \end{itemize}
 
 \section{Data}
-The used dataset for this project was retrieved from the Mini-challenge of VAST\footnote{Visual Analytics Community
-} Challenge 2015. The dataset is from a theme park, and contains information about each visitors movement. It was stored in three CSV-files\footnote{Comma-separated value
-} each representing a single day of a weekend. Every file had five datums representing, a timestamp,  an ID of a single person, an activity of either a movement or a check-in as well as two coordinates, X and Y. See table \ref{dataexample} for an typical line of data in the files.
+The used dataset for this project was retrieved from the Mini-challenge of VAST\footnote{Visual Analytics Community} Challenge 2015. The dataset is from a theme park, and contains information about each visitors movement. It was stored in three CSV-files\footnote{Comma-separated value} each representing a single day of a weekend, see table \ref{fileinfo}. Every file had five datums representing, a timestamp,  an ID of a single person, an activity of either a movement or a check-in as well as two coordinates, X and Y. See table \ref{dataexample} for a sample of one of the data files.
 
 As persons move through the park their movements are recorded with a one-second resolution. If the user does not get an new coordinate each second it means that they have not moved out of their current grid area. Each grid area is 5x5 meters and the entire park spans over 250 000 square meters.
 
@@ -137,7 +141,7 @@ Several different methods were used in order to interpret the data, both visuall
 
 The application was then extended with functionality to process the data into a new CSV-file, containing coordinates and the amount of people having visited those coordinates. These coordinates were grouped by time a time period of a given length, for instance 10:05 to 10:10. From this CSV-file, D3.js was used to create a simple web application containing a heat map which shows the intensity in which different places on the map have been visited. The user were able to select what time period it wanted to see using a simple slider. This allowed the user to visually analyze the flow of the park visitors’ movements throughout the day.
 
-Functionality to categorize the visitors into groups, based on their movement patterns was also developed. If two visitors have visited the same coordinate the same minute a thousand times, they’re seen as part of the same group. The program also calculated when groups of visitors created anomalies in the movement flow throughout the park for each 10-minute period, much like what was done visually with the heat map. This method also supported printing of information regarding anomalies around certain points of interest, for example the Creighton Pavilion. The program then printed what large flow change (relative to the mean change for each coordinate) was found around these points. 
+Functionality to categorize the visitors into groups, based on their movement patterns was also developed. If two visitors have visited the same coordinate the same minute a thousand times, they’re seen as part of the same group. The program also calculated when groups of visitors created anomalies in the movement flow throughout the park for each 10-minute period, much like what was done visually with the heat map. This method also supported printing of information regarding anomalies around certain points of interest, for example the Creighton Pavilion. The program then printed what large flow change (relative to the mean change for each coordinate) was found around these points.
 
 The application was also extended with methods to analyze separate visitors’ movement. By analyzing each visitors movement, and calculating the mean time between the logged locations, the program could detect when a person was standing still for a unusual long time. The application also summed each separate visitor’s total waiting time.
 
@@ -185,19 +189,19 @@ While some vague indications that the Sunday may be more interesting were given 
 
 \appendix
 \onecolumn
-\chapter{The first appendix} 
+% \chapter{The first appendix}
 
 
 \begin{table}[]
 \centering
-\caption{My caption}
-\label{my-label}
+\caption{Information about data files used}
+\label{fileinfo}
 \begin{tabular}{|l|l|l|l|l|l|}
 \hline
 File name & File size & Number of lines & Start time & End time & Unique visitors \\ \hline
-\begin{tabular}[c]{@{}l@{}}park-movement-\\ Fri.csv\end{tabular} & 238 MB & 6 010 915 & \begin{tabular}[c]{@{}l@{}}2014-06-06\\ 08:00:16\end{tabular} & \begin{tabular}[c]{@{}l@{}}2014-06-06\\ 23:26:36\end{tabular} & 3557 \\ \hline
-\begin{tabular}[c]{@{}l@{}}park-movement-\\ Sat.csv\end{tabular} & 359 MB & 9 078 624 & \begin{tabular}[c]{@{}l@{}}2014-06-07\\ 08:00:08\end{tabular} & \begin{tabular}[c]{@{}l@{}}2014-06-07\\ 23:35:24\end{tabular} & 6411 \\ \hline
-\begin{tabular}[c]{@{}l@{}}park-movement-\\ Sun.csv\end{tabular} & 432 MB & 10 932 426 & \begin{tabular}[c]{@{}l@{}}2014-06-08\\ 08:00:11\end{tabular} & \begin{tabular}[c]{@{}l@{}}2014-06-08\\ 23:25:13\end{tabular} & 7659 \\ \hline
+\begin{tabular}[c]{@{}l@{}}park-movement-Fri.csv\end{tabular} & 238 MB & 6 010 915 & \begin{tabular}[c]{@{}l@{}}2014-06-06\\ 08:00:16\end{tabular} & \begin{tabular}[c]{@{}l@{}}2014-06-06\\ 23:26:36\end{tabular} & 3557 \\ \hline
+\begin{tabular}[c]{@{}l@{}}park-movement-Sat.csv\end{tabular} & 359 MB & 9 078 624 & \begin{tabular}[c]{@{}l@{}}2014-06-07\\ 08:00:08\end{tabular} & \begin{tabular}[c]{@{}l@{}}2014-06-07\\ 23:35:24\end{tabular} & 6411 \\ \hline
+\begin{tabular}[c]{@{}l@{}}park-movement-Sun.csv\end{tabular} & 432 MB & 10 932 426 & \begin{tabular}[c]{@{}l@{}}2014-06-08\\ 08:00:11\end{tabular} & \begin{tabular}[c]{@{}l@{}}2014-06-08\\ 23:25:13\end{tabular} & 7659 \\ \hline
 \end{tabular}
 \end{table}
 
